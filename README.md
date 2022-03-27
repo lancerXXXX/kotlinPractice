@@ -1,1 +1,1 @@
-# kotlinPractice
+# practice-rust
