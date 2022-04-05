@@ -1,54 +1,54 @@
 use core::num;
-use std::{hash::{Hash, Hasher}, collections::{HashSet, hash_map::DefaultHasher}};
+use std::{collections::{HashMap}, vec};
 
 fn main() {
     println!("Hello, world!");
     let sl: Solution = Solution {};
-    let nums: Vec<i32> = vec![1, 2, 3, -1, -2];
-
-    let mut hs1 = DefaultHasher::new();
-    let mut hs2 = DefaultHasher::new();
-    let test1: Vec<i32> = vec![1, 2, 3];
-    let test2: Vec<i32> = vec![1, 2, 3];
-    test1.hash(&mut hs1);
-    test2.hash(&mut hs2);
-    hs1.finish();
-    println!("{}", hs1.finish());
-    println!("{}", hs2.finish());
-
+    let nums: Vec<i32> = vec![-1,0,1,2,-1,-4];
     sl.three_sum(nums);
 }
 
 struct Solution;
 
 impl Solution {
+    // three numbers sum to zero
     pub fn three_sum(&self, nums: Vec<i32>) -> Vec<Vec<i32>> {
-        let mut v_1 = 0;
-        let mut res: Vec<Vec<i32>> = Vec::new();
-        let mut res2: HashSet<Vec<i32>> = HashSet::new();
-        loop {
-            if v_1 > nums.len() - 3 {
-                break;
+        let mut result: Vec<Vec<i32>> = vec![];
+        let mut nums = nums.clone();
+        nums.sort();
+        for (pos, num) in nums.iter().enumerate() {
+            let target_right = -num;
+            let two_sum_res = self.two_sum(&nums, target_right, pos as i32 + 1);
+            for res in two_sum_res {
+                result.push(vec![nums[pos], res[0], res[1]]);
             }
-            let mut v_2 = v_1 + 1;
-            loop {
-                if v_2 > nums.len() - 2 {
-                    break;
-                }
-                let mut v_3 = v_2 + 1;
-                loop {
-                    if v_3 > nums.len() - 1 {
-                        break;
-                    }
-                    if nums[v_1] + nums[v_2] + nums[v_3] == 0 {
-                        res.insert(0, Vec::from([nums[v_1], nums[v_2], nums[v_3]]))
-                    }
-                    v_3 += 1;
-                }
-                v_2 += 1;
-            }
-            v_1 += 1;
         }
-        return res;
+        result
+    }
+    // two numbers sum to target
+    pub fn two_sum(&self, sorted_nums: & Vec<i32>, target: i32, begin: i32) -> Vec<Vec<i32>> {
+        // 最少也要两个数
+        let end: i32 = sorted_nums.len() as i32 - 1;
+        if begin >= end || end - begin < 1 {
+            return vec![];
+        }
+        let mut num_pos_map: HashMap<i32, i32> = HashMap::new();
+        let mut result:  Vec<Vec<i32>> = vec![];
+        // 上一个需要处理的left数字位置
+        let mut pre_left_num_pos: i32 = -1;
+
+        for pos in begin..end {
+            // 如果和上一个处理的left数字相同，则不需要处理
+            if pre_left_num_pos != -1 && sorted_nums[pos as usize] == sorted_nums[pre_left_num_pos as usize] {
+                continue;
+            }
+            let ept_right_num = target - sorted_nums[pos as usize];
+            if let Some(j) = num_pos_map.get(&ept_right_num) {
+                result.push(vec![sorted_nums[pos as usize], ept_right_num]);
+                pre_left_num_pos = pos;
+            }
+            num_pos_map.insert(sorted_nums[pos as usize], pos);
+        }
+        result
     }
 }
