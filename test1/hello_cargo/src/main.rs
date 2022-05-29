@@ -1,14 +1,21 @@
-use core::num;
 use std::{collections::{HashMap}, vec};
 
 fn main() {
     println!("Hello, world!");
-    let sl: Solution = Solution {};
     let nums: Vec<i32> = vec![-1,0,1,2,-1,-4];
-    sl.three_sum(nums);
+    let result = sl.three_sum(nums);
+    for vr in result {
+        for r in vr {
+            print!("{}", r)
+        }
+        print!("")
+    }
 }
 
-struct Solution;
+pub trait Solution {
+    fn three_sum(nums: Vec<Vec<i32>>) -> Vec<Vec<i32>>;
+}
+
 
 impl Solution {
     // three numbers sum to zero
@@ -43,7 +50,7 @@ impl Solution {
                 continue;
             }
             let ept_right_num = target - sorted_nums[pos as usize];
-            if let Some(j) = num_pos_map.get(&ept_right_num) {
+            if let Some(_j) = num_pos_map.get(&ept_right_num) {
                 result.push(vec![sorted_nums[pos as usize], ept_right_num]);
                 pre_left_num_pos = pos;
             }

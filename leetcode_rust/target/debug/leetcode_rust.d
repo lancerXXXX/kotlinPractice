@@ -1,0 +1,1 @@
+/home/swithun/Project/remoteRepo/practice-rust/test1/leetcode_rust/leetcode_rust/target/debug/leetcode_rust: /home/swithun/Project/remoteRepo/practice-rust/test1/leetcode_rust/leetcode_rust/src/main.rs
